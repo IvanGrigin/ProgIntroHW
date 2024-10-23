@@ -25,6 +25,7 @@ public class ReverseOdd {
         }
         scanner.close();
 
+        // В обратном порядке выводим нечетные
         for (int i = lines.size() - 1; i >= 0; i--) {
             List<Integer> reversedNumbers = lines.get(i);
             for (int j = reversedNumbers.size() - 1; j >= 0; j--) {
