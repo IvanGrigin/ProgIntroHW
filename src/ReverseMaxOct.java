@@ -7,7 +7,6 @@ public class ReverseMaxOct {
         int maxRows = 0;
         int maxCols = 0;
 
-        // Read input
         try (MyScanner scanner = new MyScanner(System.in)) {
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
@@ -33,7 +32,6 @@ public class ReverseMaxOct {
             System.err.println("Error reading input: " + e.getMessage());
         }
 
-        // Calculate max in rows and columns
         int[] maxInRows = new int[maxRows];
         int[] maxInCols = new int[maxCols];
         Arrays.fill(maxInRows, Integer.MIN_VALUE);
@@ -48,7 +46,6 @@ public class ReverseMaxOct {
             }
         }
 
-        // Write output
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out))) {
             for (int i = 0; i < lines.size(); i++) {
                 List<Integer> row = lines.get(i);

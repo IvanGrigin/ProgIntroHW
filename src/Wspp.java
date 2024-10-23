@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class WordStatInput {
+public class Wspp {
     public static void main(String[] args) {
         if (args.length < 2) {
             System.err.println("2 args: <input file> <output file>");
@@ -11,21 +11,21 @@ public class WordStatInput {
         String inputFileName = args[0];
         String outputFileName = args[1];
 
-        Map<String, Integer> wordCountMap = new LinkedHashMap<>();
+        Map<String, List<Integer>> wordStats = new LinkedHashMap<>();
+        int wordIndex = 1;
 
         try (MyScanner scanner = new MyScanner(inputFileName)) {
-            StringBuilder block = new StringBuilder();
             while (scanner.hasNext()) {
-                block.append(scanner.nextLine()).append("\n");
+                String line = scanner.nextLine();
+                wordIndex = extractWords(line, wordStats, wordIndex);
             }
-            extractWords(block.toString(), wordCountMap);
         } catch (IOException e) {
             System.err.println("Error reading input file: " + e.getMessage());
         }
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName))) {
-            for (Map.Entry<String, Integer> entry : wordCountMap.entrySet()) {
-                writer.write(entry.getKey() + " " + entry.getValue());
+            for (Map.Entry<String, List<Integer>> entry : wordStats.entrySet()) {
+                writer.write(entry.getKey() + " " + entry.getValue().size() + " " + entry.getValue().toString().replaceAll("[\\[\\],]", ""));
                 writer.newLine();
             }
         } catch (IOException e) {
@@ -33,22 +33,28 @@ public class WordStatInput {
         }
     }
 
-    private static void extractWords(String input, Map<String, Integer> wordCountMap) {
+    private static int extractWords(String line, Map<String, List<Integer>> wordStats, int wordIndex) {
         StringBuilder word = new StringBuilder();
-        for (int i = 0; i < input.length(); i++) {
-            char c = input.charAt(i);
+        for (int i = 0; i < line.length(); i++) {
+            char c = line.charAt(i);
             if (isWordCharacter(c)) {
                 word.append(Character.toLowerCase(c));
             } else if (!word.isEmpty()) {
-                String wordStr = word.toString();
-                wordCountMap.put(wordStr, wordCountMap.getOrDefault(wordStr, 0) + 1);
+                addWord(word.toString(), wordStats, wordIndex);
                 word.setLength(0);
+                wordIndex++;
             }
         }
         if (!word.isEmpty()) {
-            String wordStr = word.toString();
-            wordCountMap.put(wordStr, wordCountMap.getOrDefault(wordStr, 0) + 1);
+            addWord(word.toString(), wordStats, wordIndex);
+            wordIndex++;
         }
+        return wordIndex;
+    }
+
+    private static void addWord(String word, Map<String, List<Integer>> wordStats, int wordIndex) {
+        wordStats.putIfAbsent(word, new ArrayList<>());
+        wordStats.get(word).add(wordIndex);
     }
 
     private static boolean isWordCharacter(char c) {

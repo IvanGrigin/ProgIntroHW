@@ -4,7 +4,7 @@ import java.util.*;
 public class WordStatWordsPrefix {
     public static void main(String[] args) {
         if (args.length < 2) {
-            System.err.println("Usage: java WordStatWordsPrefix <input file> <output file>");
+            System.err.println("2 args: <input file> <output file>");
             return;
         }
 
@@ -39,20 +39,24 @@ public class WordStatWordsPrefix {
             char c = input.charAt(i);
             if (isWordCharacter(c)) {
                 word.append(Character.toLowerCase(c));
-            } else if (word.length() > 0) {
+            } else if (!word.isEmpty()) {
                 String prefix = getPrefix(word.toString());
                 prefixCountMap.put(prefix, prefixCountMap.getOrDefault(prefix, 0) + 1);
                 word.setLength(0);
             }
         }
-        if (word.length() > 0) {
+        if (!word.isEmpty()) {
             String prefix = getPrefix(word.toString());
             prefixCountMap.put(prefix, prefixCountMap.getOrDefault(prefix, 0) + 1);
         }
     }
 
     private static String getPrefix(String word) {
-        return word.length() <= 3 ? word : word.substring(0, 3);
+        if (word.length() <= 3) {
+            return word;
+        } else {
+            return word.substring(0, 3);
+        }
     }
 
     private static boolean isWordCharacter(char c) {
