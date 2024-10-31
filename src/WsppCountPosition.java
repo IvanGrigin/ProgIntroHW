@@ -14,7 +14,7 @@ public class WsppCountPosition {
         Map<String, List<Position>> wordStats = new LinkedHashMap<>();
         int lineIndex = 1;
 
-        try (MyScanner scanner = new MyScanner(inputFileName)) {
+        try (MyScanner scanner = new MyScanner(new File(inputFileName))) {
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 extractWords(line, wordStats, lineIndex);
@@ -26,11 +26,15 @@ public class WsppCountPosition {
 
         List<Map.Entry<String, List<Position>>> sortedEntries = new ArrayList<>(wordStats.entrySet());
         sortedEntries.sort((a, b) -> {
-            int cmp = Integer.compare(a.getValue().size(), b.getValue().size());
-            if (cmp == 0) {
-                return Integer.compare(a.getValue().getFirst().line, b.getValue().getFirst().line);
+            int c = Integer.compare(a.getValue().size(), b.getValue().size());
+            if (c == 0) {
+                int lineComparison = Integer.compare(a.getValue().getFirst().line, b.getValue().getFirst().line);
+                if (lineComparison == 0) {
+                    return Integer.compare(a.getValue().getFirst().index, b.getValue().getFirst().index);
+                }
+                return lineComparison;
             }
-            return cmp;
+            return c;
         });
 
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(outputFileName))) {

@@ -14,7 +14,7 @@ public class Wspp {
         Map<String, List<Integer>> wordStats = new LinkedHashMap<>();
         int wordIndex = 1;
 
-        try (MyScanner scanner = new MyScanner(inputFileName)) {
+        try (MyScanner scanner = new MyScanner(new File(inputFileName))) {
             while (scanner.hasNext()) {
                 String line = scanner.nextLine();
                 wordIndex = extractWords(line, wordStats, wordIndex);

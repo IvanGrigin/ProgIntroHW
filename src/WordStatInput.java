@@ -13,7 +13,7 @@ public class WordStatInput {
 
         Map<String, Integer> wordCountMap = new LinkedHashMap<>();
 
-        try (MyScanner scanner = new MyScanner(inputFileName)) {
+        try (MyScanner scanner = new MyScanner(new File(inputFileName))) {
             StringBuilder block = new StringBuilder();
             while (scanner.hasNext()) {
                 block.append(scanner.nextLine()).append("\n");

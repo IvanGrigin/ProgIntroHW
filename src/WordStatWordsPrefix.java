@@ -13,7 +13,7 @@ public class WordStatWordsPrefix {
 
         Map<String, Integer> prefixCountMap = new TreeMap<>(Collections.reverseOrder());
 
-        try (MyScanner scanner = new MyScanner(inputFileName)) {
+        try (MyScanner scanner = new MyScanner(new File(inputFileName))) {
             StringBuilder block = new StringBuilder();
             while (scanner.hasNext()) {
                 block.append(scanner.nextLine()).append("\n");

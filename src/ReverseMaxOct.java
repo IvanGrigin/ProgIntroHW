@@ -3,7 +3,7 @@ import java.util.*;
 
 public class ReverseMaxOct {
     public static void main(String[] args) {
-        List<List<Integer>> lines = new ArrayList<>();
+        List<int[]> lines = new ArrayList<>();
         int maxRows = 0;
         int maxCols = 0;
 
@@ -13,18 +13,25 @@ public class ReverseMaxOct {
                 if (line != null) {
                     List<Integer> numbers = new ArrayList<>();
                     String[] parts = line.trim().split("\\s+");
+
                     for (String part : parts) {
                         if (!part.isEmpty()) {
                             try {
-                                numbers.add(Integer.parseUnsignedInt(part, 8));
+                                numbers.add(Integer.parseUnsignedInt(part, 8)); // Восьмеричная интерпретация
                             } catch (NumberFormatException e) {
                                 System.err.println("Invalid number format: " + part);
                                 return;
                             }
                         }
                     }
-                    lines.add(numbers);
-                    maxCols = Math.max(maxCols, numbers.size());
+
+                    int[] numbersArray = new int[numbers.size()];
+                    for (int i = 0; i < numbers.size(); i++) {
+                        numbersArray[i] = numbers.get(i);
+                    }
+
+                    lines.add(numbersArray);
+                    maxCols = Math.max(maxCols, numbersArray.length);
                 }
             }
             maxRows = lines.size();
@@ -38,9 +45,9 @@ public class ReverseMaxOct {
         Arrays.fill(maxInCols, Integer.MIN_VALUE);
 
         for (int i = 0; i < lines.size(); i++) {
-            List<Integer> row = lines.get(i);
-            for (int j = 0; j < row.size(); j++) {
-                int value = row.get(j);
+            int[] row = lines.get(i);
+            for (int j = 0; j < row.length; j++) {
+                int value = row[j];
                 maxInRows[i] = Math.max(maxInRows[i], value);
                 maxInCols[j] = Math.max(maxInCols[j], value);
             }
@@ -48,13 +55,13 @@ public class ReverseMaxOct {
 
         try (BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(System.out))) {
             for (int i = 0; i < lines.size(); i++) {
-                List<Integer> row = lines.get(i);
-                for (int j = 0; j < row.size(); j++) {
+                int[] row = lines.get(i);
+                for (int j = 0; j < row.length; j++) {
                     if (j > 0) {
                         writer.write(" ");
                     }
                     int maxValue = Math.max(maxInRows[i], maxInCols[j]);
-                    writer.write(Integer.toOctalString(maxValue));
+                    writer.write(Integer.toOctalString(maxValue)); // Преобразование в восьмеричную систему
                 }
                 writer.newLine();
             }
